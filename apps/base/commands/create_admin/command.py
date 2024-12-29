@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash
 from settings.data_base import db
 from user.models import User, UserRoles
 from user.utils import create_usdt_wallet, generate_tax
+from settings.settings import settings
 
 
 @click.command('create-admin')
@@ -23,7 +24,8 @@ def create_admin(username: str, password: str):
                             password=hashed_password,
                             role=UserRoles.ADMIN,
                             usdt_wallet=usdt_wallet,
-                            commission=commission)
+                            commission=commission,
+                            url_webhook=settings.url_webhook)
             db.session.add(new_user)
             click.echo(f'Admin user {username} created successfully')
 

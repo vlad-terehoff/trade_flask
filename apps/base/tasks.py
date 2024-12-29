@@ -53,7 +53,7 @@ def check_transactions():
 
 @celery.task(name='tasks.check_usdt_wallet')
 def check_usdt_wallet():
-    client = Tron()
+    client = Tron(network='nile')
 
     users: List[User] = User.query.all()
 

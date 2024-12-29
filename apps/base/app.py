@@ -13,9 +13,15 @@ from flask_login import login_required, current_user
 from celery import Celery
 from transaction.urls import for_transaction_blueprint
 from user.urls import profiles_blueprint
-from datetime import timedelta
-
 from webhook.urls import webhooks_blueprint
+from datetime import datetime, timezone, timedelta
+from typing import List
+from transaction.models import Transaction
+import requests
+from user.models import User
+from tronpy import Tron
+from sqlalchemy import and_
+
 
 app = Flask(__name__)
 
@@ -23,10 +29,11 @@ app = Flask(__name__)
 api = Api(app, title="API", description="API", doc="/documentation")
 
 app.config['CELERY_BROKER_URL'] = f'redis://{settings.redis_host}:6379/5'
-app.config['CELERY_RESULT_BACKEND'] = f'redis://{settings.redis_host}:6379/5'
+app.config['result_backend'] = f'redis://{settings.redis_host}:6379/5'
 
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
 celery.conf.update(app.config)
+app.config.broker_connection_retry_on_startup = True
 
 app.secret_key = settings.secret_key
 
@@ -62,6 +69,59 @@ celery.conf.beat_schedule = {
     },
 }
 
+@celery.task(name='tasks.check_transactions')
+def check_transactions():
+    with app.app_context():
+        fifteen_minutes_ago = datetime.now(timezone.utc) - timedelta(minutes=15)
+        transactions_to_check = Transaction.query.filter(and_(Transaction.created_at < fifteen_minutes_ago,
+                                                              Transaction.status == 'Ожидание')).all()
+
+        urls_users_webhook = {}
+
+        for transaction in transactions_to_check:
+            transaction.status = 'Истекла'
+            db.session.commit()
+
+            url_user_webhook = urls_users_webhook.get(transaction.user_id)
+            if url_user_webhook:
+
+                data = {
+                    "user_id": transaction.user_id,
+                    "id_transaction": transaction.id,
+                    "status": "Истекла",
+                    "amount": float(transaction.amount),
+                    "created_at": transaction.created_at.isoformat(),
+                    "token": settings.token
+                }
+
+                requests.post(url_user_webhook, json=data)
+
+            else:
+                user: User = User.query.get(transaction.user_id)
+                url_user_webhook = user.url_webhook
+                urls_users_webhook[user.id] = url_user_webhook
+
+                data = {
+                    "user_id": transaction.user_id,
+                    "id_transaction": transaction.id,
+                    "status": "Истекла",
+                    "amount": float(transaction.amount),
+                    "created_at": transaction.created_at.isoformat(),
+                    "token": settings.token
+                }
+
+                requests.post(url_user_webhook, json=data)
+
+
+@celery.task(name='tasks.check_usdt_wallet')
+def check_usdt_wallet():
+    with app.app_context():
+        client = Tron()
+
+        users: List[User] = User.query.all()
+
+        for user in users:
+            balance = client.get_account_balance(user.usdt_wallet)
 
 @app.route('/')
 @app.route('/index')

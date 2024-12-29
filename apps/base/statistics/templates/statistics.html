@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-
+    <div>
+        <label for="refresh-interval">Выберите интервал обновления:</label>
+        <select id="refresh-interval">
+            <option value="0">0 секунд</option>
+            <option value="10">10 секунд</option>
+            <option value="15">15 секунд</option>
+            <option value="30">30 секунд</option>
+            <option value="60">1 минута</option>
+        </select>
+    </div>
   {% if current_user['role'] == 'Админ' %}
     <div>
        <div><p>Общее количество пользователей: <b>{{ data['user_count'] }}</b></p></div>
@@ -34,6 +43,38 @@
                 </ul>
         {% endif %}
     </div>
-  {% endif %}
 
+  {% endif %}
+<script>
+function refreshPage() {
+        location.reload();
+    }
+
+    const intervalSelect = document.getElementById('refresh-interval');
+
+    let refreshInterval = 0;
+
+    const savedInterval = localStorage.getItem('refreshInterval');
+    if (savedInterval) {
+        refreshInterval = parseInt(savedInterval);
+        intervalSelect.value = refreshInterval;
+        if (refreshInterval > 0) {
+            window.refreshTimer = setInterval(refreshPage, refreshInterval * 1000);
+        }
+    }
+
+
+    intervalSelect.addEventListener('change', function() {
+
+        clearInterval(window.refreshTimer);
+
+        refreshInterval = parseInt(this.value);
+
+        localStorage.setItem('refreshInterval', refreshInterval);
+
+        if (refreshInterval > 0) {
+            window.refreshTimer = setInterval(refreshPage, refreshInterval * 1000);
+        }
+    });
+</script>
 {% endblock %}

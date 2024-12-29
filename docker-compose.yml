@@ -3,15 +3,14 @@ version: "3.9"
 networks:
   app-net-dev:
     driver: bridge
-    name: 'trade_network'
+    name: 'dis_network'
 
 services:
   web-trade:
-    container_name: paradigma-2-web
+    container_name: web-trade
     build:
       context: ./
       dockerfile: apps/docker/web/Dockerfile
-    command: gunicorn --worker-tmp-dir /dev/shm base_dir.wsgi:application --bind 0.0.0.0:8000
     expose:
       - 8000
     volumes:
@@ -20,7 +19,7 @@ services:
       - app-net-dev
 
     ports:
-        - "7500:8000"
+        - "7123:8000"
     env_file:
         - apps/.env
     depends_on:
@@ -29,11 +28,11 @@ services:
 
   db-trade:
     image: postgres:16.0
-    container_name: paradigma-2-db
+    container_name: db-trade
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - apps/.env.dev
+      - apps/.env
     ports:
       - "5411:5432"
     networks:
@@ -69,7 +68,6 @@ services:
       - apps/.env
     depends_on:
       - web-trade
-      - redis-trade
       - celery-trade
     restart: unless-stopped
 
@@ -82,18 +80,14 @@ services:
       - ./apps/base/:/app/web/
     depends_on:
       - web-trade
-      - redis-trade
       - celery-trade
       - celery-beat-trade
     networks:
-      app-net-dev:
-        aliases:
-            - flower-drill.local
-            - www.flower-drill.local
+      - app-net-dev
     ports:
       - 4525:5555
     env_file:
-      - apps/.env.dev
+      - apps/.env
     restart: unless-stopped
 
 volumes:
