@@ -1,7 +1,44 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <div class="transactions">
+<style>
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    .transactions {
+        margin: 20px auto;
+        width: 80%;
+    }
+    .filter-transactions {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .filter-transactions label {
+        margin-right: 10px;
+    }
+    .filter-transactions select {
+        margin-right: 15px;
+        padding: 5px;
+        border: 1px solid lightblue;
+        border-radius: 5px;
+    }
+    button {
+        padding: 5px 15px;
+        border: none;
+        background-color: lightblue;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    button:hover {
+        background-color: darkblue;
+    }
+</style>
+
+<div class="transactions">
     {% if current_user['role'] == 'Админ' %}
     <form class="filter-transactions" method="GET" action="{{ url_for('form_transaction.get_transaction') }}">
         <label for="user_id">Пользователь:</label>
@@ -24,14 +61,14 @@
         <button type="submit">Фильтровать</button>
     </form>
 
-        {% for transaction in transactions %}
-            {% include "_transaction.html" %}
-        {% endfor %}
+    {% for transaction in transactions %}
+        {% include "_transaction.html" %}
+    {% endfor %}
     {% else %}
-        {% for transaction in transactions %}
-            {% include "_user_transaction.html" %}
-        {% endfor %}
+    {% for transaction in transactions %}
+        {% include "_user_transaction.html" %}
+    {% endfor %}
     {% endif %}
-    </div>
+</div>
 
 {% endblock %}

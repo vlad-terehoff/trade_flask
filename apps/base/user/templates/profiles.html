@@ -1,12 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .create-user, .many-users {
+            margin: 20px auto;
+            width: 80%;
+        }
+        .create-user a {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 1px solid lightblue;
+            border-radius: 10px;
+            text-decoration: none;
+            color: black;
+            transition: background-color 0.3s ease;
+        }
+        .create-user a:hover {
+            background-color: lightblue;
+        }
+        .profile-container {
+            border: 1px solid lightblue;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+    </style>
+
     <div class="create-user">
         <p><a href="{{ url_for('profiles.create_profile_for_admin') }}">Создать пользователя</a></p>
-    </div >
+    </div>
+
     <div class="many-users">
-    {% for profile in profiles %}
-        {% include "_profile.html" %}
-    {% endfor %}
+        {% for profile in profiles %}
+            <div class="profile-container">
+                {% include "_profile.html" %}
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

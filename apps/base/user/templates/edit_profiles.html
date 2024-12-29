@@ -1,5 +1,53 @@
 {% extends "base.html" %}
 {% block content %}
+<style>
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    form {
+        display: inline-block;
+        border: 1px solid lightblue;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px auto;
+        width: 80%;
+    }
+    div {
+        margin-bottom: 15px;
+        display: flex; /* Используем flexbox для выравнивания */
+        justify-content: space-between; /* Пространство между элементами */
+        align-items: center; /* Центрирование по вертикали */
+    }
+    label {
+        width: 30%; /* Ширина для меток */
+        text-align: right; /* Выравнивание текста меток вправо */
+        margin-right: 10px; /* Отступ между меткой и полем ввода */
+    }
+    input[type="text"], input[type="number"], select {
+        width: calc(70% - 10px); /* Ширина для полей ввода */
+        padding: 10px;
+        border: 1px solid lightblue;
+        border-radius: 5px;
+    }
+    .submit-container {
+        display: flex; /* Используем flexbox для кнопки */
+        justify-content: center; /* Центрирование кнопки */
+    }
+    input[type="submit"] {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        background-color: white;
+        color: black;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    input[type="submit"]:hover {
+        background-color: lightblue; /* Цвет фона при наведении на кнопку */
+    }
+</style>
 
 <form method="POST" action="{{ url_for('profiles.edit_profile_for_admin', id=id) }}">
     {{ form.csrf_token }}
@@ -7,31 +55,31 @@
     <input type="hidden" name="id" value="{{ id }}">
 
     <div>
-        {{ form.username.label }}
+        <label>{{ form.username.label }}</label>
         {{ form.username }}
     </div>
 
     <div>
-        {{ form.balance.label }}
+        <label>{{ form.balance.label }}</label>
         {{ form.balance }}
     </div>
 
     <div>
-        {{ form.commission.label }}
+        <label>{{ form.commission.label }}</label>
         {{ form.commission }}
     </div>
 
     <div>
-        {{ form.usdt_wallet.label }}
+        <label>{{ form.usdt_wallet.label }}</label>
         {{ form.usdt_wallet }}
     </div>
 
     <div>
-        {{ form.role.label }}
+        <label>{{ form.role.label }}</label>
         {{ form.role }}
     </div>
 
-    <div>
+    <div class="submit-container">
         {{ form.submit() }}
     </div>
 </form>

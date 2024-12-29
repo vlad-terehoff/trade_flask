@@ -1,5 +1,3 @@
-version: "3.9"
-
 networks:
   app-net-dev:
     driver: bridge
@@ -92,4 +90,5 @@ services:
 
 volumes:
   postgres_data:
+
 

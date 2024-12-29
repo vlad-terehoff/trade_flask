@@ -1,11 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="one-user">
-       <div><p>Ваш ник: <b>{{ user.username }}</b></p></div>
-       <div><p>Ваш балан: <b>{{ user.balance }}</b></p></div>
-       <div><p>Ваша комиссия: <b>{{ user.commission }}</b></p></div>
-       <div><p>Ваш кошелёк: <b>{{ user.usdt_wallet }}</b></p></div>
-        <p><a href="{{ url_for('profiles.edit_profile', id=current_user.id) }}">Редактировать профиль</a></p>
-    </div>
+<style>
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    .one-user {
+        border: 1px solid lightblue;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px auto;
+        width: 80%;
+    }
+    .one-user div {
+        margin-bottom: 10px;
+    }
+    .one-user a {
+        display: inline-block;
+        padding: 10px 15px;
+        border: 1px solid lightblue;
+        border-radius: 10px;
+        text-decoration: none;
+        color: black;
+        transition: background-color 0.3s ease;
+    }
+    .one-user a:hover {
+        background-color: lightblue;
+    }
+</style>
+
+<div class="one-user">
+   <div><p>Ваш ник: <b>{{ user.username }}</b></p></div>
+   <div><p>Ваш балан: <b>{{ user.balance }}</b></p></div>
+   <div><p>Ваша комиссия: <b>{{ user.commission }}</b></p></div>
+   <div><p>Ваш кошелёк: <b>{{ user.usdt_wallet }}</b></p></div>
+   <p><a href="{{ url_for('profiles.edit_profile', id=current_user.id) }}">Редактировать профиль</a></p>
+</div>
 {% endblock %}

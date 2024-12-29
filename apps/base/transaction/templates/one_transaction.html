@@ -1,13 +1,54 @@
 {% extends "base.html" %}
-
 {% block content %}
+<style>
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    .transaction {
+        border: 1px solid lightblue;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px auto;
+        width: 80%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .field {
+        border: 1px solid lightblue;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 10px 0;
+        text-align: center;
+    }
+    .transaction a {
+        display: inline-block;
+        padding: 10px 15px;
+        border: 1px solid lightblue;
+        border-radius: 10px;
+        text-decoration: none;
+        color: black;
+        transition: background-color 0.3s ease;
+    }
+    .transaction a:hover {
+        background-color: lightblue;
+    }
+</style>
+
 <div class="transaction">
-    <h2>Сумма: {{ transaction.amount }}</h2>
-    <p>Создана: {{ transaction.created_at }}</p>
-    <p>Комиссия: {{ transaction.commission }}</p>
-    <p>Статус: {{ transaction.status }}</p>
+    <h2>Сумма: <b>{{ transaction.amount }}</b></h2>
+    <div class="field">
+        <p>Создана: <b>{{ transaction.created_at }}</b></p>
+    </div>
+    <div class="field">
+        <p>Комиссия: <b>{{ transaction.commission }}</b></p>
+    </div>
+    <div class="field">
+        <p>Статус: <b>{{ transaction.status }}</b></p>
+    </div>
     {% if transaction['status'] == 'Ожидание' %}
-    <p><a href="{{ url_for('form_transaction.edit_transaction_for_admin', id=transaction.id) }}">Редактировать статус</a></p>
+    <div class="field">
+        <p><a href="{{ url_for('form_transaction.edit_transaction_for_admin', id=transaction.id) }}">Редактировать статус</a></p>
+    </div>
     {% endif %}
 </div>
 

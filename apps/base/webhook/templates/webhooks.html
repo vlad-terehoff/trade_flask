@@ -1,9 +1,28 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <div class="many-webhooks">
+<style>
+    body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+    }
+    .many-webhooks {
+        margin: 20px auto;
+        width: 80%;
+    }
+    .webhook-container {
+        border: 1px solid lightblue;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<div class="many-webhooks">
     {% for webhook in webhooks %}
-        {% include "_webhook.html" %}
+        <div class="webhook-container">
+            {% include "_webhook.html" %}
+        </div>
     {% endfor %}
-    </div>
+</div>
 {% endblock %}

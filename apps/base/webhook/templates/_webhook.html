@@ -1,5 +1,27 @@
 <div class="profile">
     <h2>Ваша транзакция от {{ webhook.created_at }}</h2>
-    <p>На сумму: {{ webhook.amount }}</p>
-    <p>Получила статус: {{ webhook.status }}</p>
+    <div class="field">
+        <p>На сумму: <b>{{ webhook.amount }}</b></p>
+    </div>
+    <div class="field">
+        <p>Получила статус: <b>{{ webhook.status }}</b></p>
+    </div>
 </div>
+
+<style>
+    .profile {
+        border: 1px solid lightblue;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px auto;
+        width: 80%;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .field {
+        border: 1px solid lightblue;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 10px 0;
+        text-align: center;
+    }
+</style>

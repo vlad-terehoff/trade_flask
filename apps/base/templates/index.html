@@ -1,10 +1,39 @@
 {% extends "base.html" %}
 {% block content %}
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid lightblue;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            margin: 0 auto;
+        }
+        .divider {
+            border-top: 1px solid lightblue;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .balance-info {
+            text-align: center;
+        }
+    </style>
 
     <h1>Hi, {{ user.username }}!</h1>
-    <div>
-       <div><p>Ваш балан: <b>{{ user.balance }}</b></p></div>
-        <div><p>Ваша комиссия: <b>{{ user.commission }}</b></p></div>
-        <div><p>Ваш кошелёк: <b>{{ user.usdt_wallet }}</b></p></div>
+    <div class="container">
+        <div class="balance-info">
+            <p>Ваш балан: <b>{{ user.balance }}</b></p>
+        </div>
+        <div class="divider"></div>
+        <div class="balance-info">
+            <p>Ваша комиссия: <b>{{ user.commission }}</b></p>
+        </div>
+        <div class="divider"></div>
+        <div class="balance-info">
+            <p>Ваш кошелёк: <b>{{ user.usdt_wallet }}</b></p>
+        </div>
     </div>
 {% endblock %}

@@ -1,80 +1,106 @@
 {% extends "base.html" %}
 {% block content %}
-    <div>
-        <label for="refresh-interval">Выберите интервал обновления:</label>
-        <select id="refresh-interval">
-            <option value="0">0 секунд</option>
-            <option value="10">10 секунд</option>
-            <option value="15">15 секунд</option>
-            <option value="30">30 секунд</option>
-            <option value="60">1 минута</option>
-        </select>
-    </div>
-  {% if current_user['role'] == 'Админ' %}
-    <div>
-       <div><p>Общее количество пользователей: <b>{{ data['user_count'] }}</b></p></div>
-       <div><p>Общее количество транзакций: <b>{{ data['transaction_count'] }}</b></p></div>
-       <div><p>Сумма транзакций за текущий день: <b>{{ data['total_sum'] }}</b></p></div>
-        {% if  data['last_ten_transaction'] %}
-                <ul>
-                <li>
-                    {% for transaction in data['last_ten_transaction'] %}
-                            <h2>Сумма: {{ transaction['amount'] }}</h2>
-                            <p>дата: {{ transaction['created_at'] }}</p>
-                            <p>Комисия: {{ transaction['commission'] }}</p>
-                    {% endfor %}
-                </li>
-                </ul>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            width: 80%;
+        }
+        .info-box {
+            border: 1px solid lightblue;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+        }
+        li {
+            border: 1px solid lightblue;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+
+    <div class="container">
+        <div class="info-box">
+            <label for="refresh-interval">Выберите интервал обновления:</label>
+            <select id="refresh-interval">
+                <option value="0">0 секунд</option>
+                <option value="10">10 секунд</option>
+                <option value="15">15 секунд</option>
+                <option value="30">30 секунд</option>
+                <option value="60">1 минута</option>
+            </select>
+        </div>
+
+        {% if current_user['role'] == 'Админ' %}
+        <div class="info-box">
+           <p>Общее количество пользователей: <b>{{ data['user_count'] }}</b></p>
+           <p>Общее количество транзакций: <b>{{ data['transaction_count'] }}</b></p>
+           <p>Сумма транзакций за текущий день: <b>{{ data['total_sum'] }}</b></p>
+        </div>
+        {% else %}
+        <div class="info-box">
+           <p>Общее количество транзакций: <b>{{ data['transaction_count'] }}</b></p>
+           <p>Сумма транзакций за текущий день: <b>{{ data['total_sum'] }}</b></p>
+        </div>
         {% endif %}
-    </div>
-  {% else %}
-    <div>
-       <div><p>Общее количество транзакций: <b>{{ data['transaction_count'] }}</b></p></div>
-       <div><p>Сумма транзакций за текущий день: <b>{{ data['total_sum'] }}</b></p></div>
-        {% if  data['last_ten_transaction'] %}
+
+        {% if data['last_ten_transaction'] %}
                 <ul>
-                <li>
                     {% for transaction in data['last_ten_transaction'] %}
+                        <li>
                             <h2>Сумма: {{ transaction['amount'] }}</h2>
-                            <p>дата: {{ transaction['created_at'] }}</p>
-                            <p>Комисия: {{ transaction['commission'] }}</p>
+                            <p>Дата: {{ transaction['created_at'] }}</p>
+                            <p>Комиссия: {{ transaction['commission'] }}</p>
+                        </li>
                     {% endfor %}
-                </li>
                 </ul>
         {% endif %}
     </div>
 
-  {% endif %}
 <script>
 function refreshPage() {
-        location.reload();
+    location.reload();
+}
+
+const intervalSelect = document.getElementById('refresh-interval');
+
+let refreshInterval = 0;
+
+const savedInterval = localStorage.getItem('refreshInterval');
+if (savedInterval) {
+    refreshInterval = parseInt(savedInterval);
+    intervalSelect.value = refreshInterval;
+    if (refreshInterval > 0) {
+        window.refreshTimer = setInterval(refreshPage, refreshInterval * 1000);
     }
+}
 
-    const intervalSelect = document.getElementById('refresh-interval');
+intervalSelect.addEventListener('change', function() {
+    clearInterval(window.refreshTimer);
 
-    let refreshInterval = 0;
+    refreshInterval = parseInt(this.value);
 
-    const savedInterval = localStorage.getItem('refreshInterval');
-    if (savedInterval) {
-        refreshInterval = parseInt(savedInterval);
-        intervalSelect.value = refreshInterval;
-        if (refreshInterval > 0) {
-            window.refreshTimer = setInterval(refreshPage, refreshInterval * 1000);
-        }
+    localStorage.setItem('refreshInterval', refreshInterval);
+
+    if (refreshInterval > 0) {
+        window.refreshTimer = setInterval(refreshPage, refreshInterval * 1000);
     }
-
-
-    intervalSelect.addEventListener('change', function() {
-
-        clearInterval(window.refreshTimer);
-
-        refreshInterval = parseInt(this.value);
-
-        localStorage.setItem('refreshInterval', refreshInterval);
-
-        if (refreshInterval > 0) {
-            window.refreshTimer = setInterval(refreshPage, refreshInterval * 1000);
-        }
-    });
+});
 </script>
+
 {% endblock %}
