@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="transactions">
+    {% if current_user['role'] == 'Админ' %}
+    <form class="filter-transactions" method="GET" action="{{ url_for('form_transaction.get_transaction') }}">
+        <label for="user_id">Пользователь:</label>
+        <select name="user_id" id="user_id">
+            <option value="">Все пользователи</option>
+            {% for user in users %}
+                <option value="{{ user.id }}">{{ user.username }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="status">Статус:</label>
+        <select name="status" id="status">
+            <option value="">Все статусы</option>
+            <option value="Подтверждена">Подтверждена</option>
+            <option value="Ожидание">В ожидании</option>
+            <option value="Отменена">Отменена</option>
+            <option value="Истекла">Истекла</option>
+        </select>
+
+        <button type="submit">Фильтровать</button>
+    </form>
+
+        {% for transaction in transactions %}
+            {% include "_transaction.html" %}
+        {% endfor %}
+    {% else %}
+        {% for transaction in transactions %}
+            {% include "_user_transaction.html" %}
+        {% endfor %}
+    {% endif %}
+    </div>
+
+{% endblock %}

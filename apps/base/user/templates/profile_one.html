@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="one-user">
+       <div><p>Ваш ник: <b>{{ user.username }}</b></p></div>
+       <div><p>Ваш балан: <b>{{ user.balance }}</b></p></div>
+       <div><p>Ваша комиссия: <b>{{ user.commission }}</b></p></div>
+       <div><p>Ваш кошелёк: <b>{{ user.usdt_wallet }}</b></p></div>
+        <p><a href="{{ url_for('profiles.edit_profile', id=current_user.id) }}">Редактировать профиль</a></p>
+    </div>
+{% endblock %}

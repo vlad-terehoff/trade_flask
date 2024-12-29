@@ -1,0 +1,101 @@
+version: "3.9"
+
+networks:
+  app-net-dev:
+    driver: bridge
+    name: 'trade_network'
+
+services:
+  web-trade:
+    container_name: paradigma-2-web
+    build:
+      context: ./
+      dockerfile: apps/docker/web/Dockerfile
+    command: gunicorn --worker-tmp-dir /dev/shm base_dir.wsgi:application --bind 0.0.0.0:8000
+    expose:
+      - 8000
+    volumes:
+        - ./apps/base/:/app/web/
+    networks:
+      - app-net-dev
+
+    ports:
+        - "7500:8000"
+    env_file:
+        - apps/.env
+    depends_on:
+      - db-trade
+    restart: unless-stopped
+
+  db-trade:
+    image: postgres:16.0
+    container_name: paradigma-2-db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - apps/.env.dev
+    ports:
+      - "5411:5432"
+    networks:
+      - app-net-dev
+    restart: unless-stopped
+
+  celery-trade:
+    build:
+      context: ./
+      dockerfile: apps/docker/web/Dockerfile
+    command: celery -A app.celery worker --loglevel=info
+    volumes:
+      - ./apps/base/:/app/web/
+    networks:
+      - app-net-dev
+    env_file:
+      - apps/.env
+    depends_on:
+      - web-trade
+    restart: unless-stopped
+
+  celery-beat-trade:
+    build:
+      context: ./
+      dockerfile: apps/docker/web/Dockerfile
+    command: celery -A app.celery beat --loglevel=info
+    volumes:
+      - ./apps/base/:/app/web/
+    networks:
+      - app-net-dev
+
+    env_file:
+      - apps/.env
+    depends_on:
+      - web-trade
+      - redis-trade
+      - celery-trade
+    restart: unless-stopped
+
+  flower-trade:
+    build:
+      context: ./
+      dockerfile: apps/docker/web/Dockerfile
+    command: celery -A app.celery flower
+    volumes:
+      - ./apps/base/:/app/web/
+    depends_on:
+      - web-trade
+      - redis-trade
+      - celery-trade
+      - celery-beat-trade
+    networks:
+      app-net-dev:
+        aliases:
+            - flower-drill.local
+            - www.flower-drill.local
+    ports:
+      - 4525:5555
+    env_file:
+      - apps/.env.dev
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="POST" action="{{ url_for('profiles.edit_profile_for_admin', id=id) }}">
+    {{ form.csrf_token }}
+
+    <input type="hidden" name="id" value="{{ id }}">
+
+    <div>
+        {{ form.username.label }}
+        {{ form.username }}
+    </div>
+
+    <div>
+        {{ form.balance.label }}
+        {{ form.balance }}
+    </div>
+
+    <div>
+        {{ form.commission.label }}
+        {{ form.commission }}
+    </div>
+
+    <div>
+        {{ form.usdt_wallet.label }}
+        {{ form.usdt_wallet }}
+    </div>
+
+    <div>
+        {{ form.role.label }}
+        {{ form.role }}
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+
+{% endblock %}

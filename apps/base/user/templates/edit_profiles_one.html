@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="POST" action="{{ url_for('profiles.edit_profile', id=id) }}">
+    {{ form.csrf_token }}
+
+    <input type="hidden" name="id" value="{{ id }}">
+
+    <div>
+        {{ form.username.label }}
+        {{ form.username }}
+    </div>
+    <div>
+        {{ form.usdt_wallet.label }}
+        {{ form.usdt_wallet }}
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+
+{% endblock %}

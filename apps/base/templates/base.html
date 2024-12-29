@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+    <head>
+      <title>Welcome to Dashboard</title>
+    </head>
+    <body>
+    <a href="{{ url_for('index') }}">Home</a>
+      {% if current_user['role'] == 'Админ' %}
+        <a href="{{ url_for('profiles.get_profiles') }}">Profiles</a>
+        {% else %}
+        <a href="{{ url_for('profiles.get_profile_one', id=current_user.id) }}">Profile</a>
+    {% endif %}
+
+    <a href="{{ url_for('statistics.statistic') }}">Statistic</a>
+
+    {% if current_user['role'] == 'Админ' %}
+        <a href="{{ url_for('form_transaction.get_transaction') }}">Transactions</a>
+        {% else %}
+        <a href="{{ url_for('form_transaction.get_users_transaction', id=current_user.id) }}">Transactions</a>
+    {% endif %}
+
+    <a href="{{ url_for('webhooks.get_users_webhooks') }}">Webhooks</a>
+
+  {% if current_user.is_anonymous %}
+  <a href="{{ url_for('login.login') }}">Login</a>
+  {% else %}
+  <a href="{{ url_for('login.logout') }}">Logout</a>
+  {% endif %}
+        {% block content %}{% endblock %}
+    </body>
+</html>

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="create-user">
+        <p><a href="{{ url_for('profiles.create_profile_for_admin') }}">Создать пользователя</a></p>
+    </div >
+    <div class="many-users">
+    {% for profile in profiles %}
+        {% include "_profile.html" %}
+    {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h1>Hi, {{ user.username }}!</h1>
+    <div>
+       <div><p>Ваш балан: <b>{{ user.balance }}</b></p></div>
+        <div><p>Ваша комиссия: <b>{{ user.commission }}</b></p></div>
+        <div><p>Ваш кошелёк: <b>{{ user.usdt_wallet }}</b></p></div>
+    </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="profile">
+        <h2>{{ user.username }}</h2>
+        <p>Баланс: {{ user.balance }}</p>
+        <p>Комиссия: {{ user.commission }}</p>
+        <p>Кошелёк: {{ user.usdt_wallet }}</p>
+        <p>Роль: {{ user.role }}</p>
+        <p><a href="{{ url_for('profiles.edit_profile_for_admin', id=user.id) }}">Редактировать профиль</a></p>
+    </div>
+{% endblock %}

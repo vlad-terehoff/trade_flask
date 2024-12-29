@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="many-webhooks">
+    {% for webhook in webhooks %}
+        {% include "_webhook.html" %}
+    {% endfor %}
+    </div>
+{% endblock %}

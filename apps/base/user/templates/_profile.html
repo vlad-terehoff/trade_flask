@@ -1,0 +1,9 @@
+<!-- _profile.html -->
+<div class="profile">
+    {% if current_user['role'] == 'Админ' %}
+    <h2>{{ profile.username }}</h2>
+    <p>Роль: {{ profile.role }}</p>
+    <p><a href="{{ url_for('profiles.get_profile_for_admin', id=profile.id) }}">Просмотреть профиль</a></p>
+    <p><a href="{{ url_for('profiles.delete_profile_for_admin', id=profile.id) }}">Удалить профиль</a></p>
+    {% endif %}
+</div>

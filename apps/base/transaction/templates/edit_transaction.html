@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="POST" action="{{ url_for('form_transaction.edit_transaction_for_admin', id=id) }}">
+    {{ form.csrf_token }}
+
+    <input type="hidden" name="id" value="{{ id }}">
+
+    <div>
+        {{ form.status.label }}
+        {{ form.status }}
+    </div>
+
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+
+{% endblock %}
